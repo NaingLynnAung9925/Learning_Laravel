@@ -1,0 +1,1 @@
+<p>This is profile for user {{ route('profile', ['id' => $id]) }}</p>
