@@ -1,1 +1,1 @@
-<p>This is profile for user {{ route('profile', ['id' => $id]) }}</p>
+<h1>This is viewing of user {{ $id }}</h1>

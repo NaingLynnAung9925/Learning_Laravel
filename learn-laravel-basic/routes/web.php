@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\PhotoController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,66 +22,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Redirect
 
-Route::redirect('/here', '/there');
-
-// View
-
-Route::view('/view', '/about', ['name'=>'unknow']);
-
-//Require Parameter
-
-Route::get('users/{id}', function ($id) {
-    return 'User'. $id ;
-});
-
-Route::get('post/{postId}/user/{userId}', function ($postId, $userId) {
-    return "This is $postId and User id is $userId";
-});
+Route::get('user/{id}', [UserController::class, 'show']);
 
 
-// Optional Parameter
+Route::get('photos/popular', [PhotoController::class, 'popular']);
+Route::resource('photos', PhotoController::class);
+// Custom missing model
 
-Route::get('customer/{name?}', function ($name = "Customer") {
-    return "Customer name is ". $name;
-});
+// Route::resource('photos', PhotoController::class)
+//     ->missing(function (Request $request){
+//         return Redirect::route('photos.index');
+// });
 
-// Regular Expression
 
-Route::get('client/{id}/{name}', function ($id, $name) {
-    return "Client id is $id and Name is $name";
-})->whereNumber('id')->whereAlpha('name');
+// Partial Resource
 
-Route::get('category/{category}', function ($category) {
-    return $category;
-})->whereIn('category', ['movie', 'song', 'painting']);
+// Route::resource('photos', PhotoController::class)->only([
+//     'index', 'show'
+// ]);
 
-// Name routes
+// Route::resource('photos', PhotoController::class)->except([
+//     'create', 'store', 'update', 'destroy'
+// ]);
 
-// Route::get('home', function () {
-//     return view('home');
-// })->name('home');
+//Name Resource Routes
 
-Route::get('/about-me', function () {
-    return view("about");
-})->name('about');
-
-Route::get('user/{id?}/profile', function ($id) {
-    return view('user', ['id'=>$id]);
-})->name('profile');
-
-// Route Prefix
-
-Route::prefix('admin')->group(function(){
-    Route::get('/home', function () {
-        return view('home');
-    });
-});
-
-Route::name('admin.')->group(function(){
-    Route::get('/user', function () {
-        return view('user');
-    })->name('user');
-});
+// Route::resource('photos', PhotoController::class)->names([
+//     'create' => 'photos.build'
+// ]);
 
