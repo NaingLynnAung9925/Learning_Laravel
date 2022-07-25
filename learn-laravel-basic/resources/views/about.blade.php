@@ -1,3 +1,10 @@
-<h1>This is about page</h1>
+@extends('master')
 
-<a href="{{ route('home') }}">to home</a>
+
+@section('context')
+
+<h1>This is About Page</h1>
+
+<a href="{{ route('home') }}" class="btn btn-outline-primary">to home</a>
+
+@endsection
