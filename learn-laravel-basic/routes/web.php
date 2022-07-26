@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\DatabaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,70 +14,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('index', [DatabaseController::class, 'index']);
 
-// Redirect
+Route::get('column', [DatabaseController::class, 'column']);
 
-Route::redirect('/here', '/there');
+Route::get('count', [DatabaseController::class, 'countUser']);
 
-// View
+Route::get('exist', [DatabaseController::class, 'exist']);
 
-Route::view('/view', '/about', ['name'=>'unknow']);
+Route::get('select', [DatabaseController::class, 'selectUser']);
 
-//Require Parameter
+Route::get('addColumn', [DatabaseController::class, 'addSelect']);
 
-Route::get('users/{id}', function ($id) {
-    return 'User'. $id ;
-});
+Route::get('join', [DatabaseController::class, 'join']);
 
-Route::get('post/{postId}/user/{userId}', function ($postId, $userId) {
-    return "This is $postId and User id is $userId";
-});
+Route::get('leftjoin', [DatabaseController::class, 'leftJoin']);
 
+Route::get('rightjoin', [DatabaseController::class, 'rightJoin']);
 
-// Optional Parameter
-
-Route::get('customer/{name?}', function ($name = "Customer") {
-    return "Customer name is ". $name;
-});
-
-// Regular Expression
-
-Route::get('client/{id}/{name}', function ($id, $name) {
-    return "Client id is $id and Name is $name";
-})->whereNumber('id')->whereAlpha('name');
-
-Route::get('category/{category}', function ($category) {
-    return $category;
-})->whereIn('category', ['movie', 'song', 'painting']);
-
-// Name routes
-
-// Route::get('home', function () {
-//     return view('home');
-// })->name('home');
-
-Route::get('/about-me', function () {
-    return view("about");
-})->name('about');
-
-Route::get('user/{id?}/profile', function ($id) {
-    return view('user', ['id'=>$id]);
-})->name('profile');
-
-// Route Prefix
-
-Route::prefix('admin')->group(function(){
-    Route::get('/home', function () {
-        return view('home');
-    });
-});
-
-Route::name('admin.')->group(function(){
-    Route::get('/user', function () {
-        return view('user');
-    })->name('user');
-});
-
+Route::get('delete', [DatabaseController::class, 'delete']);
