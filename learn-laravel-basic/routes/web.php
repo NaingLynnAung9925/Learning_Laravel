@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,8 +15,10 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('home', function () {
-    return view('home');
-})->name('home');
+// Route::get('home', function () {
+//     return view('home');
+// })->name('home');
 
-Route::post('home', [HomeController::class , 'create']);
+// Route::post('home', [HomeController::class , 'create']);
+
+Route::resource('posts', PostController::class);
