@@ -1,9 +1,10 @@
 <?php
 
-
+namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Post;
 
 class CategoryController extends Controller
 {
@@ -26,6 +27,15 @@ class CategoryController extends Controller
     public function create()
     {
         return view('categories.create');
+        // $post = new Post;
+        // $post->title = 'create';
+        // $post->body = 'create';
+        // $post->image = '/public/images/1658909820_Screenshot (6).png';
+        // $post->save();
+
+        // $category = Category::find([1,2]);
+        // $post->categories()->attach($category);
+
     }
 
     /**
@@ -40,7 +50,7 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
         Category::create($request->all());
-        return redirect()->route('categories.index')->with('success', "Category created successfully");
+        return redirect()->route('posts.create')->with('success', "Category created successfully");
     }
 
     /**

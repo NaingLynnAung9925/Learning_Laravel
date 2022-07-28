@@ -15,7 +15,6 @@
         <th>Image</th>
         <th>Created_at</th>
         <th>Updated_at</th>
-        <th>Deleted_at</th>
         <th>Operation</th>
     </tr>
     @foreach ($posts as $post)
@@ -28,7 +27,6 @@
             </td>
             <td> {{ $post->created_at->format('d-m-Y')}} </td>
             <td> {{ $post->updated_at->format('d-m-Y') }} </td>
-            <td> {{ $post->deleted_at }} </td>
             <td>
                 <div class="dropdown">
                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
