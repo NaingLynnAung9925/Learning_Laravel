@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use App\Models\Post;
-use App\Models\Category;
 use App\Http\Requests\StorePostRequest;
 
+use App\Models\Post;
+use App\Models\Category;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
@@ -31,7 +31,6 @@ class PostController extends Controller
     {
         $categories = Category::all();
         return view('posts.create', compact('categories'));
-       
     }
 
     /**
@@ -46,24 +45,16 @@ class PostController extends Controller
         $requestData =$request->all();
         $file = $request->file('image');
         $fileName = time().'_'.$file->getClientOriginalName();
-        $path =  $file->storeAs('images', $fileName);
-        $requestData["image"] = '/storage/'."$path";
 
-        
-        // $post = new Post;
-        // $requestData =$request->all();
-        // $path = public_path('images');
-        // $file = $request->file('image');
-        // $fileName = time().'_'.$file->getClientOriginalName();
-        // $file->move($path, $fileName);
-        // $requestData["image"] = '/images/'.$fileName;
-
-
-        
+        Storage::putFileAs('public/images', $file, $fileName);
+        $path = "/images/".$fileName;
+        $requestData["image"] = $path;
 
         $posts = $post->create($requestData);
         $category = Category::whereIn('name', $request->categories)->get();
         $posts->categories()->attach($category);
+
+       
         return redirect()->route('posts.index')->with('success', "Post created successfully");
     }
 
@@ -101,22 +92,22 @@ class PostController extends Controller
      */
     public function update(StorePostRequest $request, $id)
     {
-
-        
-
         $post = Post::find($id);
 
-        $filePath = public_path($post->image) ;
+        $filePath = "storage".$post->image ;
+        
         if(file_exists($filePath)){
             unlink($filePath);
         }
 
         $requestData =$request->all();
-        $path = public_path('images');
+        
         $file = $request->file('image');
         $fileName = time().'_'.$request->file('image')->getClientOriginalName();
-        $file->move($path, $fileName);
-        $requestData["image"] = '/images/'.$fileName;
+      
+        Storage::putFileAs('public/images', $file, $fileName);
+        $path = "/images/".$fileName;
+        $requestData["image"] = $path;
 
         $category = Category::where('name', $request->categories)->get();
         $post->categories()->attach($category);
@@ -134,11 +125,12 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-        $filePath = public_path($post->image) ;
-        if(file_exists($filePath)){
-            unlink($filePath);
-        }
+        
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
+
+
+
+
 }

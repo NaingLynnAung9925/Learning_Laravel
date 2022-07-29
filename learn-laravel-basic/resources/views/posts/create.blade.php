@@ -35,9 +35,7 @@
             <div class="alert alert-danger w-25">{{ $message }}</div>
          @enderror
         </div>
-        <div class="">
-            <a href="{{ route('categories.create') }}" class="btn btn-primary">Add Category</a>
-        </div>
+        
         <div class="form-group mb-3">
             <label for="categories">Categories</label>
             <select name="categories[]" id="categories" class="form-control" multiple >
@@ -47,7 +45,10 @@
                     @endforeach
             </select>
         </div>
-        <button class="btn btn-primary" type="submit">Create</button>
+        <button class="btn btn-primary" type="submit">Create Post</button>
+        
+            <a href="{{ route('categories.create') }}" class="btn btn-primary">Add Category</a>
+
     </form>
 
 @endsection

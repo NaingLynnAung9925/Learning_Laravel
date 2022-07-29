@@ -22,5 +22,11 @@ use App\Http\Controllers\CategoryController;
 Route::resource('posts', PostController::class);
 Route::resource('categories', CategoryController::class);
 
+
+
 Route::get('test', [HomeController::class, 'test']);
+
+Route::get('/profile', function(){
+
+})->middleware('auth.basic');
 

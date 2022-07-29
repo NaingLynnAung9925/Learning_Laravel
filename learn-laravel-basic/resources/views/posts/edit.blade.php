@@ -23,7 +23,7 @@
         <div class="form-group">
             <label for="image">Image</label>
             <input type="file" name="image" id="image" class="form-control mb-3" value="{{ $post->image }}">
-            @error('body')
+            @error('image')
                 <div class="alert alert-danger w-25">{{ $message }}</div>
             @enderror
         </div>
