@@ -9,6 +9,10 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+use App\Mail\NotifyMail;
+use Mail;
+
+
 class PostController extends Controller
 {
     /**
@@ -54,8 +58,10 @@ class PostController extends Controller
         $category = Category::whereIn('name', $request->categories)->get();
         $posts->categories()->attach($category);
 
+        
        
         return redirect()->route('posts.index')->with('success', "Post created successfully");
+        
     }
 
     /**

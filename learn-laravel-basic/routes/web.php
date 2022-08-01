@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SendEmailController;
 
 
 
@@ -30,3 +31,6 @@ Route::get('/profile', function(){
 
 })->middleware('auth.basic');
 
+Route::get('send-mail', [SendEmailController::class, 'index']);
+
+Route::view('image', 'mail');
