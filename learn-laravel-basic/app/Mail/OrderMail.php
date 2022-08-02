@@ -21,8 +21,8 @@ class OrderMail extends Mailable
      */
     public function __construct($id)
     {
-        $post = Post::find($id);
-        dd($post);
+        $post = Post::whereIn('id', $id)->get()->toArray();
+        $this->post = $post;
     }
 
     /**
@@ -32,10 +32,11 @@ class OrderMail extends Mailable
      */
     public function build()
     {
-        dd($this->post);
+        
         return $this->view('posts.order')
                     ->with([
-                        'title' => $this->posts['title'],
+                        'title' => $this->post[0]['title'],
+                        'body' => $this->post[0]['body']
                     ]);
     }
 }

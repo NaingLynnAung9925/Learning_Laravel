@@ -1,9 +1,7 @@
-Title : {{ $request->title }}
+Title : {{ $title }}
 
-Body : {{ $request->body }}
+<br>
+Body : {{ $body }}
 
 Category : 
 
-@foreach ($request->categories as $category)
-    {{ $category->name }}
-@endforeach

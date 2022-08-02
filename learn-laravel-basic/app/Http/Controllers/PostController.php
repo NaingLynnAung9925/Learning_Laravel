@@ -131,8 +131,9 @@ class PostController extends Controller
 
     public function order($id)
     {
-        $post = Post::find($id);
-        Mail::to('scm.nainglynnaung@gmail.com')->send(new OrderMail($post));
+        
+        $postData = Post::find($id);
+        Mail::to('scm.nainglynnaung@gmail.com')->send(new OrderMail($postData));
         return redirect()->route('posts.index')->with('success', 'Email sends successfully');
     }
 }
