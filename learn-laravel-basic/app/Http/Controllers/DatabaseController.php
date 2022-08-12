@@ -4,37 +4,41 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Database;
+use App\Models\Post;
 
 class DatabaseController extends Controller
 {
    public function index()
    {
+
     // $user = DB::table('databases')->where('name', 'unknow')->first();
     // return $user->email;
-    // echo DB::table('databases')->where('name', 'kyaw')->value('email');
-    return DB::table('databases')->find(3);
+     // return Database::where('name', 'kyaw kyaw')->value('email');
+     // return Database::distinct()->get();
+     return Database::all();
    }
 
    public function column()
    {
-    $titles = DB::table('databases')->pluck('title', 'name');
-    foreach($titles as $name => $title){
-        echo $name ." - ".$title. ' ';
+    $titles = Database::pluck( 'email', 'name');
+    foreach($titles as $name => $email){
+        echo $name ." - ".$email. "<br>";
     }
    }
 
    public function countUser()
    {
-    return DB::table('databases')->count();
+    return Database::count();
    }
 
    public function exist()
    {
-        if(DB::table('databases')->where('name', 'unknow')->exists())
+        if(Database::where('name', 'unknow')->exists())
         {
-            echo "User is exist";
+            echo "User is exist". "<br>";
         }
-        if(DB::table('databases')->where('name', 'aung aung')->doesntExist())
+        if(Database::where('name', ' aung')->doesntExist())
         {
             echo "User doesn't exist";
         }
@@ -42,29 +46,27 @@ class DatabaseController extends Controller
 
    public function selectUser()
    {
-    echo $users = DB::table('databases')->select('name', 'email')->orderBy('name', 'asc')->get();
+    echo $users = Database::select('name', 'email')->orderBy('name', 'asc')->get();
    }
 
    public function addSelect()
    {
-        $query = DB::table('databases')->select('email');
+        $query = Database::select('email');
         $users = $query->addSelect('title')->get();
         echo $users;
    }
 
    public function join()
    {
-        $users = DB::table('databases')
-                ->join('posts', 'databases.id', '=', 'posts.databases_id')
+        $users = Database::join('posts', 'databases.id', '=', 'posts.databases_id')
                 ->get();
                 echo "<pre>";
-    print_r($users);
+    return $users;
    }
 
    public function leftJoin()
    {
-        $leftjoin = DB::table('databases')
-                ->leftJoin('posts', 'databases.id', '=', 'posts.databases_id')
+        $leftjoin = Database::leftJoin('posts', 'databases.id', '=', 'posts.databases_id')
                 ->get();
         echo "<pre>";
         print_r($leftjoin);
@@ -72,17 +74,15 @@ class DatabaseController extends Controller
 
    public function rightJoin()
    {
-        $leftjoin = DB::table('databases')
-                ->rightJoin('posts', 'databases.id', '=', 'posts.databases_id')
+        $rightjoin = Database::rightJoin('posts', 'databases.id', '=', 'posts.databases_id')
                 ->get();
         echo "<pre>";
-        print_r($leftjoin);
+        print_r($rightjoin);
    }
 
    public function delete()
    {
-    $deleted = DB::table('posts')
-                ->where('databases_id', '>', '3')
+    $deleted = Post::where('databases_id', '>', '3')
                 ->delete();
     echo "Posts have been deleted";
    }
