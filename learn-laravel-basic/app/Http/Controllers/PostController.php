@@ -1,10 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Http\Requests\StorePostRequest;
+
+use App\Models\Post;
+use App\Models\Category;
 
 use Illuminate\Http\Request;
-use App\Models\Post;
-use App\Http\Requests\StorePostRequest;
+use Illuminate\Support\Facades\Storage;
+
+use App\Mail\NotifyMail;
+use Mail;
+
 
 class PostController extends Controller
 {
@@ -24,9 +31,10 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Category $category)
     {
-        return view('posts.create');
+        $categories = Category::all();
+        return view('posts.create', compact('categories'));
     }
 
     /**
@@ -37,16 +45,23 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-
+        $post = new Post;
         $requestData =$request->all();
-        $path = public_path('images');
         $file = $request->file('image');
         $fileName = time().'_'.$file->getClientOriginalName();
-        $file->move($path, $fileName);
-        $requestData["image"] = '/images/'.$fileName;
 
-        Post::create($requestData);
+        Storage::putFileAs('public/images', $file, $fileName);
+        $path = "/images/".$fileName;
+        $requestData["image"] = $path;
+
+        $posts = $post->create($requestData);
+        $category = Category::whereIn('name', $request->categories)->get();
+        $posts->categories()->attach($category);
+
+        
+       
         return redirect()->route('posts.index')->with('success', "Post created successfully");
+        
     }
 
     /**
@@ -67,10 +82,11 @@ class PostController extends Controller
      * @param  App\Model\Post $post
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category, $id)
     {
         $post = Post::find($id);
-        return view('posts.edit', compact('post'));
+        $categories = Category::all();
+        return view('posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -82,23 +98,27 @@ class PostController extends Controller
      */
     public function update(StorePostRequest $request, $id)
     {
-
         $post = Post::find($id);
 
-        $filePath = public_path($post->image) ;
+        $filePath = "storage".$post->image ;
+        
         if(file_exists($filePath)){
             unlink($filePath);
         }
 
         $requestData =$request->all();
-        $path = public_path('images');
+        
         $file = $request->file('image');
         $fileName = time().'_'.$request->file('image')->getClientOriginalName();
-        $file->move($path, $fileName);
-        $requestData["image"] = '/images/'.$fileName;
+      
+        Storage::putFileAs('public/images', $file, $fileName);
+        $path = "/images/".$fileName;
+        $requestData["image"] = $path;
 
-
+        $category = Category::where('name', $request->categories)->get();
+        $post->categories()->attach($category);
         $post->update($requestData);
+
         return redirect()->route('posts.index')->with('success', 'Post updated successfully');
     }
 
@@ -111,11 +131,12 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
-        $filePath = public_path($post->image) ;
-        if(file_exists($filePath)){
-            unlink($filePath);
-        }
+        
         $post->delete();
         return redirect()->route('posts.index')->with('success', 'Post deleted successfully');
     }
+
+
+
+
 }

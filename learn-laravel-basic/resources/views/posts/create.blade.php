@@ -1,4 +1,13 @@
 @extends('posts.layouts.app')
+
+
+@if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <p>{{ $message }}</p>
+    </div>
+@endif
+
+
 @section('context')
 
     <h2>New Post</h2>
@@ -19,14 +28,27 @@
             <div class="alert alert-danger w-25">{{ $message }}</div>
             @enderror
         </div>
-        <div class="form-group mb-3">
+        <div class="form-group my-3">
             <label for="image">Image</label>
             <input type="file" name="image" id="image" class="form-control">
             @error('image')
             <div class="alert alert-danger w-25">{{ $message }}</div>
          @enderror
         </div>
-        <button class="btn btn-primary" type="submit">Create</button>
+        
+        <div class="form-group mb-3">
+            <label for="categories">Categories</label>
+            <select name="categories[]" id="categories" class="form-control" multiple >
+                <option value="">Select Category</option>
+                @foreach ($categories as $category)
+                    <option value="{{ $category->name }}"> {{ $category->name }} </option>
+                    @endforeach
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Create Post</button>
+        
+            <a href="{{ route('categories.create') }}" class="btn btn-primary">Add Category</a>
+
     </form>
 
 @endsection

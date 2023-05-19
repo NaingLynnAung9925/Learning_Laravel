@@ -23,9 +23,17 @@
         <div class="form-group">
             <label for="image">Image</label>
             <input type="file" name="image" id="image" class="form-control mb-3" value="{{ $post->image }}">
-            @error('body')
+            @error('image')
                 <div class="alert alert-danger w-25">{{ $message }}</div>
             @enderror
+        </div>
+        <div class="form-group mb-3">
+            <label for="categories">Categories</label>
+            <select name="categories[]" id="categories" class="form-control" multiple>
+                @foreach ($categories as $category)
+                    <option> {{ $category->name }} </option>
+                @endforeach
+            </select>
         </div>
         <a href="{{ route('posts.index') }}" class="btn btn-dark">Back</a>
         <button class="btn btn-primary" type="submit">Update</button>
