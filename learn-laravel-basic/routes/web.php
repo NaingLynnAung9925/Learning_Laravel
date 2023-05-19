@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SendEmailController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,70 +20,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Redirect
-
-Route::redirect('/here', '/there');
-
-// View
-
-Route::view('/view', '/about', ['name'=>'unknow']);
-
-//Require Parameter
-
-Route::get('users/{id}', function ($id) {
-    return 'User'. $id ;
-});
-
-Route::get('post/{postId}/user/{userId}', function ($postId, $userId) {
-    return "This is $postId and User id is $userId";
-});
+Route::resource('posts', PostController::class);
+Route::resource('categories', CategoryController::class);
 
 
-// Optional Parameter
 
-Route::get('customer/{name?}', function ($name = "Customer") {
-    return "Customer name is ". $name;
-});
+Route::get('test', [HomeController::class, 'test']);
 
-// Regular Expression
+Route::get('/profile', function(){
 
-Route::get('client/{id}/{name}', function ($id, $name) {
-    return "Client id is $id and Name is $name";
-})->whereNumber('id')->whereAlpha('name');
+})->middleware('auth.basic');
 
-Route::get('category/{category}', function ($category) {
-    return $category;
-})->whereIn('category', ['movie', 'song', 'painting']);
+Route::get('send-mail', [SendEmailController::class, 'index']);
 
-// Name routes
-
-// Route::get('home', function () {
-//     return view('home');
-// })->name('home');
-
-Route::get('/about-me', function () {
-    return view("about");
-})->name('about');
-
-Route::get('user/{id?}/profile', function ($id) {
-    return view('user', ['id'=>$id]);
-})->name('profile');
-
-// Route Prefix
-
-Route::prefix('admin')->group(function(){
-    Route::get('/home', function () {
-        return view('home');
-    });
-});
-
-Route::name('admin.')->group(function(){
-    Route::get('/user', function () {
-        return view('user');
-    })->name('user');
-});
-
+Route::view('image', 'mail');
